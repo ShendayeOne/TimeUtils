@@ -2,6 +2,7 @@ package com.sy.timeutis;
 
 import android.app.Activity;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
@@ -42,6 +43,8 @@ public class MainActivity extends Activity {
     private TextView tv_desc;
     private Miui10Calendar miui10Calendar;
 
+    private Context mContext;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,9 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         /************************ 初始化 ************************/
+
+        mContext = this;
+
 
         tv_data = findViewById(R.id.tv_data);
         tv_desc = findViewById(R.id.tv_desc);
@@ -58,17 +64,12 @@ public class MainActivity extends Activity {
         /************************ 核心功能 ************************/
 
         Feb = getFebDays();//先得知道2月是多少天
-        msg =
-//                "\n" + "当前日期：" + getCurrentTime() + "\n\n" +
-                "今天是本月的第 " + getToday() + " 天。" + "\n" +
+        msg =   "今天是本月的第 " + getToday() + " 天。" + "\n" +
                 "距离本月结束仅剩 " + getTimeRemaining() + " 天！" + "\n" +
                 "距离本季度结束仅剩 " + getQuarterRemainingDays() + "  天！" ;
 
         SpannableString spanStr = new SpannableString(msg);
         //设置文字的大小
-//        spanStr.setSpan(new ForegroundColorSpan(Color.RED), msg.indexOf("期：")+2, msg.indexOf("期")+12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        spanStr.setSpan(new AbsoluteSizeSpan(45), msg.indexOf("期：")+2, msg.indexOf("期")+12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
         spanStr.setSpan(new ForegroundColorSpan(Color.RED), msg.indexOf("第 ")+2, msg.indexOf(" 天。"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spanStr.setSpan(new AbsoluteSizeSpan(55), msg.indexOf("第 ")+2, msg.indexOf(" 天。"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
@@ -107,6 +108,12 @@ public class MainActivity extends Activity {
         //背景随机轮播
         LL = findViewById(R.id.LL);
         LL.setBackgroundResource(NBUtilResource.getId(this,"drawable","background"+getRandom()));
+        LL.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LL.setBackgroundResource(NBUtilResource.getId(mContext,"drawable","background"+getRandom()));
+            }
+        });
         /************************ 测试日志 ************************/
         //测试日志
         mLog("今年的2月有多少天：" + getFebDays());
