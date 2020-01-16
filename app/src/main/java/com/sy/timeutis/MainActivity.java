@@ -17,6 +17,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.necer.calendar.BaseCalendar;
+import com.necer.calendar.Miui10Calendar;
+import com.necer.entity.CalendarDate;
+import com.necer.entity.Lunar;
+import com.necer.listener.OnCalendarChangedListener;
+import com.necer.utils.CalendarUtil;
+
+import org.joda.time.LocalDate;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -29,23 +38,36 @@ public class MainActivity extends Activity {
     private LinearLayout LL;
     private String msg;
 
+    private TextView tv_data;
+    private TextView tv_desc;
+    private Miui10Calendar miui10Calendar;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /************************ 初始化 ************************/
+
+        tv_data = findViewById(R.id.tv_data);
+        tv_desc = findViewById(R.id.tv_desc);
+
+        miui10Calendar = findViewById(R.id.miui10Calendar);
+
         /************************ 核心功能 ************************/
 
         Feb = getFebDays();//先得知道2月是多少天
-        msg = "\n" + "当前日期：" + getCurrentTime() + "\n\n" +
+        msg =
+//                "\n" + "当前日期：" + getCurrentTime() + "\n\n" +
                 "今天是本月的第 " + getToday() + " 天。" + "\n\n" +
                 "距离本月结束仅剩 " + getTimeRemaining() + " 天！" + "\n\n" +
                 "距离本季度结束仅剩 " + getQuarterRemainingDays() + "  天！" + "\n";
 
         SpannableString spanStr = new SpannableString(msg);
         //设置文字的大小
-        spanStr.setSpan(new ForegroundColorSpan(Color.RED), msg.indexOf("期：")+2, msg.indexOf("期")+12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spanStr.setSpan(new AbsoluteSizeSpan(45), msg.indexOf("期：")+2, msg.indexOf("期")+12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        spanStr.setSpan(new ForegroundColorSpan(Color.RED), msg.indexOf("期：")+2, msg.indexOf("期")+12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        spanStr.setSpan(new AbsoluteSizeSpan(45), msg.indexOf("期：")+2, msg.indexOf("期")+12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         spanStr.setSpan(new ForegroundColorSpan(Color.RED), msg.indexOf("第 ")+2, msg.indexOf(" 天。"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spanStr.setSpan(new AbsoluteSizeSpan(55), msg.indexOf("第 ")+2, msg.indexOf(" 天。"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -61,12 +83,24 @@ public class MainActivity extends Activity {
 
 
         /************************ 优化内容 ************************/
-        copyBt = findViewById(R.id.copyBtn);
-        copyBt.setOnClickListener(new OnClickListener() {
+//        copyBt = findViewById(R.id.copyBtn);
+//        copyBt.setOnClickListener(new OnClickListener() {
+//
+//            @Override
+//            public void onClick(View arg0) {
+//                copy(msg);
+//            }
+//        });
 
+        miui10Calendar.setOnCalendarChangedListener(new OnCalendarChangedListener() {
             @Override
-            public void onClick(View arg0) {
-                copy(msg);
+            public void onCalendarChange(BaseCalendar baseCalendar, int year, int month, LocalDate localDate) {
+                if (localDate != null) {
+                    CalendarDate calendarDate = CalendarUtil.getCalendarDate(localDate);
+                    Lunar lunar = calendarDate.lunar;
+                    tv_data.setText(localDate.toString("yyyy年MM月dd日"));
+                    tv_desc.setText(lunar.chineseEra + lunar.animals + "年" + lunar.lunarMonthStr + lunar.lunarDayStr);
+                }
             }
         });
 
