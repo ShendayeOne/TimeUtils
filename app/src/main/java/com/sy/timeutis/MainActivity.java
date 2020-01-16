@@ -60,9 +60,9 @@ public class MainActivity extends Activity {
         Feb = getFebDays();//先得知道2月是多少天
         msg =
 //                "\n" + "当前日期：" + getCurrentTime() + "\n\n" +
-                "今天是本月的第 " + getToday() + " 天。" + "\n\n" +
-                "距离本月结束仅剩 " + getTimeRemaining() + " 天！" + "\n\n" +
-                "距离本季度结束仅剩 " + getQuarterRemainingDays() + "  天！" + "\n";
+                "今天是本月的第 " + getToday() + " 天。" + "\n" +
+                "距离本月结束仅剩 " + getTimeRemaining() + " 天！" + "\n" +
+                "距离本季度结束仅剩 " + getQuarterRemainingDays() + "  天！" ;
 
         SpannableString spanStr = new SpannableString(msg);
         //设置文字的大小
@@ -106,22 +106,7 @@ public class MainActivity extends Activity {
 
         //背景随机轮播
         LL = findViewById(R.id.LL);
-        int randomNumber = getRandom();
-        if (randomNumber == 1) {
-            LL.setBackgroundResource(R.drawable.background1);
-        } else if (randomNumber == 2) {
-            LL.setBackgroundResource(R.drawable.background2);
-        } else if (randomNumber == 3) {
-            LL.setBackgroundResource(R.drawable.background3);
-        } else if (randomNumber == 4) {
-            LL.setBackgroundResource(R.drawable.background4);
-        } else if (randomNumber == 5) {
-            LL.setBackgroundResource(R.drawable.background5);
-        } else if (randomNumber == 6) {
-            LL.setBackgroundResource(R.drawable.background6);
-        } else {
-            LL.setBackgroundResource(R.drawable.background7);
-        }
+        LL.setBackgroundResource(NBUtilResource.getId(this,"drawable","background"+getRandom()));
         /************************ 测试日志 ************************/
         //测试日志
         mLog("今年的2月有多少天：" + getFebDays());
@@ -151,10 +136,10 @@ public class MainActivity extends Activity {
         Toast.makeText(getApplicationContext(), "复制成功", Toast.LENGTH_LONG).show();
     }
 
-    //获取1-6的随机数
+    //获取1-32的随机数
     public int getRandom() {
         Random rand = new Random();
-        return rand.nextInt(7) + 1;
+        return rand.nextInt(32) + 1;
     }
 
     /************************ 核心辅助内容 ************************/
